@@ -7,7 +7,6 @@ License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-#Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.93.tar.xz
 Source0:        https://git.kernel.org/torvalds/t/linux-5.1-rc4.tar.gz
 Source2:        config
 Source3:        cmdline-iot-lts2019
