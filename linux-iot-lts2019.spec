@@ -8,8 +8,8 @@ Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
 Source0:        https://git.kernel.org/torvalds/t/linux-5.1-rc4.tar.gz
-Source2:        config
-Source3:        cmdline-iot-lts2019
+Source1:        config
+Source2:        cmdline-iot-lts2019
 
 %define ktarget0 iot-lts2019
 %define kversion0 %{version}-%{release}.%{ktarget0}
