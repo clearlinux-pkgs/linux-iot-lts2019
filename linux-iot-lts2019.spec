@@ -677,8 +677,8 @@ Linux kernel extra files
 # Clear Linux patch
 %patch9001 -p1
 
+cp %{SOURCE1} .
 cp %{SOURCE2} .
-cp %{SOURCE3} .
 cp -a /usr/lib/firmware/i915 firmware/
 cp -a /usr/lib/firmware/intel-ucode firmware/
 cp -a /usr/lib/firmware/intel firmware/
