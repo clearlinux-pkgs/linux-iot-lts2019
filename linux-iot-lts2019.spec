@@ -1,15 +1,16 @@
 # This is a linux kernel with the preempt_rt patch set plus PK patches
 
 Name:           linux-iot-lts2019
-Version:        5.1.0_rc4
+Version:        5.1.0
 Release:        2
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-Source0:        https://git.kernel.org/torvalds/t/linux-5.1-rc4.tar.gz
+Source0:        https://git.kernel.org/torvalds/t/linux-5.1.tar.gz
 Source1:        config
 Source2:        cmdline-iot-lts2019
+Source3:        fragment-sos
 
 %define ktarget0 iot-lts2019
 %define kversion0 %{version}-%{release}.%{ktarget0}
@@ -344,7 +345,7 @@ Patch0312: 0312-test-configs-use-for-clean-and-android-bare-metal-BA.patch
 
 # Clear Linux patch
 Patch9001: 9001-init-wait-for-partition-and-retry-scan.patch
-
+Patch9002: 9002-Add-boot-option-to-allow-unsigned-modules.patch
 %description
 The Linux kernel.
 
@@ -357,7 +358,7 @@ Group:          kernel
 Linux kernel extra files
 
 %prep
-%setup -q -n linux-5.1-rc4
+%setup -q -n linux-5.1
 
 #patchXXXX PK Series
 %patch0001 -p1
@@ -676,9 +677,11 @@ Linux kernel extra files
 
 # Clear Linux patch
 %patch9001 -p1
+%patch9002 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
+cp %{SOURCE3} .
 cp -a /usr/lib/firmware/i915 firmware/
 cp -a /usr/lib/firmware/intel-ucode firmware/
 cp -a /usr/lib/firmware/intel firmware/
@@ -688,8 +691,8 @@ BuildKernel() {
 
     Target=$1
     Arch=x86_64
-#    ExtraVer="-%{release}.${Target}"
-    ExtraVer="_rc4-%{release}.${Target}"
+    ExtraVer="-%{release}.${Target}"
+#    ExtraVer="_rc4-%{release}.${Target}"
     Config=config
 
     rm -f localversion-rt
