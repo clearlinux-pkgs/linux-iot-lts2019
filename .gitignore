@@ -3,6 +3,7 @@
 *.swp
 *xz
 *gz
-
+PatchXXXX
+patchYYYY
 results
 rpms
