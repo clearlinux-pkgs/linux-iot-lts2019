@@ -2,7 +2,7 @@
 
 Name:           linux-iot-lts2019
 Version:        5.1.0
-Release:        4
+Release:        5
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -10,7 +10,7 @@ Group:          kernel
 Source0:        https://git.kernel.org/torvalds/t/linux-5.1.tar.gz
 Source1:        config
 Source2:        cmdline-iot-lts2019
-Source3:        fragment-sos
+Source3:        fragment-iot-lts2019
 
 %define ktarget0 iot-lts2019
 %define kversion0 %{version}-%{release}.%{ktarget0}
