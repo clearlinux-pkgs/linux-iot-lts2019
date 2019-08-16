@@ -1,13 +1,13 @@
 # This is a linux kernel with the preempt_rt patch set plus PK patches
 
 Name:           linux-iot-lts2019
-Version:        5.3_rc3
-Release:        6
+Version:        5.3.0_rc3
+Release:        7
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-Source0:        https://git.kernel.org/torvalds/t/linux-5.3-rc3.tar.gz
+Source0:        https://git.kernel.org/torvalds/t/linux-v5.3-rc3.tar.gz
 Source1:        config
 Source2:        cmdline-iot-lts2019
 Source3:        fragment-iot-lts2019
@@ -26,7 +26,7 @@ Requires: systemd-bin
 
 # quilt.url: https://github.com/intel/linux-intel-quilt
 # quilt.branch: mainline-tracking
-# quilt.tag: mainline-tracking-v5.3-rc3-190807T184017Z
+# quilt.tag:  mainline-tracking-v5.3-rc3-190807T184017Z
 
 # PK XXXX: Series
 Patch0001: 0001-mm-export-some-vm_area-APIs.patch
@@ -852,7 +852,7 @@ Group:          kernel
 Linux kernel extra files
 
 %prep
-%setup -q -n linux-5.3-rc3
+%setup -q -n linux-v5.3-rc3
 
 #patchXXXX PK Series
 %patch0001 -p1
@@ -1679,15 +1679,15 @@ BuildKernel() {
 
     Target=$1
     Arch=x86_64
-    ExtraVer="-%{release}.${Target}"
-#    ExtraVer="_rc3-%{release}.${Target}"
+#    ExtraVer="-%{release}.${Target}"
+    ExtraVer="_rc3-%{release}.${Target}"
     Config=config
 
     rm -f localversion-rt
 
     perl -p -i -e "s/^EXTRAVERSION.*/EXTRAVERSION = ${ExtraVer}/" Makefile
 #    perl -p -i -e "s/^(EXTRAVERSION.*)/\$1${ExtraVer}/" Makefile
-#    perl -p -i -e "s/^CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=\"\"/" ${Config}
+    perl -p -i -e "s/^CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=\"\"/" ${Config}
 
     make O=${Target} -s mrproper
     cp ${Config} ${Target}/.config
@@ -1706,42 +1706,45 @@ InstallKernel() {
     Kversion=$2
     Arch=x86_64
     KernelDir=%{buildroot}/usr/lib/kernel
+#    CmdLine=cmdline
+    CmdLine=cmdline-iot-lts2019
     DevDir=%{buildroot}/usr/lib/modules/${Kversion}/build
+    KerDir=%{buildroot}/usr/lib/modules/${Kversion}/kernel
+    ModDir=%{buildroot}/usr/lib/modules/${Kversion}/modules.
 
     mkdir   -p ${KernelDir}
+    mkdir   -p ${KerDir}
     install -m 644 ${Target}/.config    ${KernelDir}/config-${Kversion}
     install -m 644 ${Target}/System.map ${KernelDir}/System.map-${Kversion}
     install -m 644 ${Target}/vmlinux    ${KernelDir}/vmlinux-${Kversion}
-    install -m 644 cmdline-${Target}    ${KernelDir}/cmdline-${Kversion}
+    install -m 644 ${CmdLine}           ${KernelDir}/cmdline-${Kversion}
     cp  ${Target}/arch/x86/boot/bzImage ${KernelDir}/org.clearlinux.${Target}.%{version}-%{release}
     chmod 755 ${KernelDir}/org.clearlinux.${Target}.%{version}-%{release}
 
-    echo lts-v4.19.59-base-190722T171340Z > ${KernelDir}/upstream-tag-${Kversion}
-
     mkdir -p %{buildroot}/usr/lib/modules
+    mkdir -p ${ModDir}
     make O=${Target} -s ARCH=${Arch} INSTALL_MOD_PATH=%{buildroot}/usr modules_install
 
     rm -f %{buildroot}/usr/lib/modules/${Kversion}/build
     rm -f %{buildroot}/usr/lib/modules/${Kversion}/source
 
     mkdir -p ${DevDir}
-    find . -type f -a '(' -name 'Makefile*' -o -name 'Kbuild*' -o -name 'Kconfig*' ')' -exec cp -t ${DevDir} --parents -pr {} +
-    find . -type f -a '(' -name '*.sh' -o -name '*.pl' ')' -exec cp -t ${DevDir} --parents -pr {} +
-    cp -t ${DevDir} -pr ${Target}/{Module.symvers,tools}
-    ln -s ../../../kernel/config-${Kversion} ${DevDir}/.config
-    ln -s ../../../kernel/System.map-${Kversion} ${DevDir}/System.map
-    cp -t ${DevDir} --parents -pr arch/x86/include
-    cp -t ${DevDir}/arch/x86/include -pr ${Target}/arch/x86/include/*
-    cp -t ${DevDir}/include -pr include/*
-    cp -t ${DevDir}/include -pr ${Target}/include/*
-    cp -t ${DevDir} --parents -pr scripts/*
-    cp -t ${DevDir}/scripts -pr ${Target}/scripts/*
-    find  ${DevDir}/scripts -type f -name '*.[cho]' -exec rm -v {} +
-    find  ${DevDir} -type f -name '*.cmd' -exec rm -v {} +
+   # find . -type f -a '(' -name 'Makefile*' -o -name 'Kbuild*' -o -name 'Kconfig*' ')' -exec cp -t ${DevDir} --parents -pr {} +
+   # find . -type f -a '(' -name '*.sh' -o -name '*.pl' ')' -exec cp -t ${DevDir} --parents -pr {} +
+   # cp -t ${DevDir} -pr ${Target}/{Module.symvers,tools}
+   # ln -s ../../../kernel/config-${Kversion} ${DevDir}/.config
+   # ln -s ../../../kernel/System.map-${Kversion} ${DevDir}/System.map
+   # cp -t ${DevDir} --parents -pr arch/x86/include
+   # cp -t ${DevDir}/arch/x86/include -pr ${Target}/arch/x86/include/*
+   # cp -t ${DevDir}/include -pr include/*
+   # cp -t ${DevDir}/include -pr ${Target}/include/*
+   # cp -t ${DevDir} --parents -pr scripts/*
+   # cp -t ${DevDir}/scripts -pr ${Target}/scripts/*
+   # find  ${DevDir}/scripts -type f -name '*.[cho]' -exec rm -v {} +
+   # find  ${DevDir} -type f -name '*.cmd' -exec rm -v {} +
     # Cleanup any dangling links
-    find ${DevDir} -type l -follow -exec rm -v {} +
+   # find ${DevDir} -type l -follow -exec rm -v {} + 
 
-    # Kernel default target link
     ln -s org.clearlinux.${Target}.%{version}-%{release} %{buildroot}/usr/lib/kernel/default-${Target}
 }
 
@@ -1756,7 +1759,6 @@ rm -rf %{buildroot}/usr/lib/firmware
 /usr/lib/kernel/cmdline-%{kversion0}
 /usr/lib/kernel/org.clearlinux.%{ktarget0}.%{version}-%{release}
 /usr/lib/kernel/default-%{ktarget0}
-/usr/lib/kernel/upstream-tag-%{kversion0}
 /usr/lib/modules/%{kversion0}/kernel
 /usr/lib/modules/%{kversion0}/modules.*
 
@@ -1764,4 +1766,3 @@ rm -rf %{buildroot}/usr/lib/firmware
 %dir /usr/lib/kernel
 /usr/lib/kernel/System.map-%{kversion0}
 /usr/lib/kernel/vmlinux-%{kversion0}
-
