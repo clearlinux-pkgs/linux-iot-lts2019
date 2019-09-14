@@ -23,7 +23,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20190620010021.20637-4-danie
  4 files changed, 16 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index 458784fd556e..00b6512cdee6 100644
+index 4c61f4ebcde2..e3ddfcd79a5a 100644
 --- a/drivers/gpu/drm/i915/i915_drv.c
 +++ b/drivers/gpu/drm/i915/i915_drv.c
 @@ -900,7 +900,7 @@ static int i915_driver_init_early(struct drm_i915_private *dev_priv)

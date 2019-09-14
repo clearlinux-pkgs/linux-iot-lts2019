@@ -28,10 +28,10 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20190620010021.20637-7-danie
  5 files changed, 33 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index 00b6512cdee6..8f84ed26e972 100644
+index e3ddfcd79a5a..4c5126baf0e2 100644
 --- a/drivers/gpu/drm/i915/i915_drv.c
 +++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -1899,6 +1899,8 @@ int i915_driver_load(struct pci_dev *pdev, const struct pci_device_id *ent)
+@@ -1905,6 +1905,8 @@ int i915_driver_load(struct pci_dev *pdev, const struct pci_device_id *ent)
  
  	disable_rpm_wakeref_asserts(&dev_priv->runtime_pm);
  
@@ -57,7 +57,7 @@ index 969e514916ab..ca4661e98f79 100644
  /* vGPU display status to be used by the host side */
  #define VGT_DRV_DISPLAY_NOT_READY 0
 diff --git a/drivers/gpu/drm/i915/i915_vgpu.c b/drivers/gpu/drm/i915/i915_vgpu.c
-index 94d3992b599d..1a8f7c731126 100644
+index 724627afdedc..458b8642d639 100644
 --- a/drivers/gpu/drm/i915/i915_vgpu.c
 +++ b/drivers/gpu/drm/i915/i915_vgpu.c
 @@ -52,34 +52,53 @@
